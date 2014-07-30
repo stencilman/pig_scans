@@ -41,7 +41,7 @@ icp_data.method = 1;  % Optional parameter
 icp_data.match_scale = 0;  % Optional parameter
  
 display('Running ICP');
-M_PC2_icp = icp(icp_data);
+[M_PC2_icp, icp_error] = icp(icp_data);
 
 % Affine Transform position
 pc2_icp = (M_PC2_icp(1:3,1:3) * pc2 + repmat(M_PC2_icp(1:3,4), 1, size(pc2,2)));
@@ -49,9 +49,11 @@ pc2_icp = (M_PC2_icp(1:3,1:3) * pc2 + repmat(M_PC2_icp(1:3,4), 1, size(pc2,2)));
 display('Displaying the results');
 figure;
 set(gcf, 'Position', [200 200 1200 1200]);
-scatter3(pc2(1,:), pc2(2,:), pc2(3,:),'b.'); hold on;
-scatter3(pig.Position(1,:), pig.Position(2,:), pig.Position(3,:),3,'r.','LineWidth',0.5);
+% scatter3(pc2(1,:), pc2(2,:), pc2(3,:),'b.'); hold on;
+scatter3(pig.Position(1,:), pig.Position(2,:), pig.Position(3,:),3,'r.','LineWidth',0.5); hold on;
 % trimesh(pig.Tri'+1, pig.Position(1,:), pig.Position(2,:), pig.Position(3,:));
 scatter3(pc2_icp(1,:), pc2_icp(2,:), pc2_icp(3,:),'k.');
 % scatter3(pc3(1,:), pc3(2,:), pc3(3,:),'g.')
 set(gcf,'renderer','opengl'); axis vis3d; axis equal;
+
+disp(['Error reported by ICP: ', num2str(icp_error)])
